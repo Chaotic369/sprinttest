@@ -6,7 +6,10 @@
   <title>Precision Analog & Digital Clock</title>
   <style>
     :root {
-      --bg-color: #0d1117;
+      --bg-color: #181c24;
+      --brick-base: #141820;
+      --brick-mortar: rgba(8, 10, 14, 0.92);
+      --spotlight: rgba(120, 160, 255, 0.12);
       --card-bg: #161b22;
       --border-color: #30363d;
       --text-main: #f0f6fc;
@@ -21,7 +24,10 @@
     }
 
     [data-theme="light"] {
-      --bg-color: #f6f8fa;
+      --bg-color: #d8dee6;
+      --brick-base: #c7ced8;
+      --brick-mortar: rgba(160, 170, 185, 0.9);
+      --spotlight: rgba(255, 255, 255, 0.35);
       --card-bg: #ffffff;
       --border-color: #d0d7de;
       --text-main: #1f2328;
@@ -36,7 +42,10 @@
     }
 
     [data-theme="emerald"] {
-      --bg-color: #061e16;
+      --bg-color: #081a14;
+      --brick-base: #061610;
+      --brick-mortar: rgba(2, 8, 6, 0.94);
+      --spotlight: rgba(32, 201, 151, 0.15);
       --card-bg: #0a2d21;
       --border-color: #124d38;
       --text-main: #e6fcf5;
@@ -51,7 +60,10 @@
     }
 
     [data-theme="ruby"] {
-      --bg-color: #1f080c;
+      --bg-color: #2b1116;
+      --brick-base: #220b10;
+      --brick-mortar: rgba(18, 4, 7, 0.94);
+      --spotlight: rgba(255, 107, 129, 0.16);
       --card-bg: #2d0d13;
       --border-color: #591622;
       --text-main: #ffe3e8;
@@ -73,7 +85,34 @@
     }
 
     body {
-      background-color: var(--bg-color);
+      background-color: var(--brick-base);
+      background-image:
+        radial-gradient(circle at 50% 40%, var(--spotlight) 0%, rgba(0, 0, 0, 0.78) 75%),
+        linear-gradient(335deg, rgba(0, 0, 0, 0.45) 0.25em, transparent 0.25em),
+        linear-gradient(155deg, rgba(255, 255, 255, 0.08) 0.25em, transparent 0.25em),
+        linear-gradient(335deg, rgba(0, 0, 0, 0.45) 0.25em, transparent 0.25em),
+        linear-gradient(155deg, rgba(255, 255, 255, 0.08) 0.25em, transparent 0.25em),
+        linear-gradient(to right, var(--brick-mortar) 3px, transparent 3px),
+        linear-gradient(to bottom, var(--brick-mortar) 3px, transparent 3px),
+        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05) 0, rgba(0, 0, 0, 0.05) 2px, transparent 2px, transparent 4px);
+      background-size:
+        100% 100%,
+        58px 28px,
+        58px 28px,
+        58px 28px,
+        58px 28px,
+        29px 28px,
+        100% 28px,
+        auto auto;
+      background-position:
+        0 0,
+        0px 4px,
+        4px 18px,
+        29px 18px,
+        33px 4px,
+        0 0,
+        0 0,
+        0 0;
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -81,19 +120,19 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow: hidden;
+      transition: background-color 0.4s ease;
     }
 
     .container {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 24px;
-      padding: 36px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 32px;
+      gap: 24px;
       max-width: 480px;
       width: 100%;
     }
@@ -126,15 +165,16 @@
 
     .clock-face-container {
       position: relative;
-      width: 280px;
-      height: 280px;
-      padding: 12px;
+      width: 310px;
+      height: 310px;
+      padding: 14px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.5));
+      background: linear-gradient(135deg, #434852 0%, #1e2126 50%, #0d0f12 100%);
       box-shadow:
-        0 18px 36px rgba(0, 0, 0, 0.65),
-        inset 0 2px 4px rgba(255, 255, 255, 0.3),
-        inset 0 -2px 6px rgba(0, 0, 0, 0.8);
+        0 35px 65px -10px rgba(0, 0, 0, 0.85),
+        0 20px 30px -5px rgba(0, 0, 0, 0.7),
+        inset 0 2px 4px rgba(255, 255, 255, 0.35),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.9);
     }
 
     .clock-face {
@@ -253,49 +293,13 @@
       z-index: 5;
     }
 
-    .digital-readout {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-    }
-
-    .digital-time {
-      font-size: 2.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .digital-time span.sec {
-      font-size: 1.5rem;
-      color: var(--sec-hand);
-      margin-left: 4px;
-    }
-
-    .digital-date {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      letter-weight: 500;
-    }
-
-    .meta-bar {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      padding-top: 16px;
-      border-top: 1px solid var(--border-color);
-    }
+    
   </style>
 </head>
 <body>
 
   <div class="container">
-    <header>
-      <h1>Chronometer</h1>
+    <header style="justify-content: flex-end;">
       <select class="theme-select" id="themePicker" aria-label="Select Theme">
         <option value="dark">Dark Theme</option>
         <option value="light">Light Theme</option>
@@ -313,17 +317,7 @@
       </div>
     </div>
 
-    <div class="digital-readout">
-      <div class="digital-time">
-        <span id="digitalTimeStr">00:00</span><span class="sec" id="digitalSecStr">:00</span>
-      </div>
-      <div class="digital-date" id="dateStr">Monday, January 1, 2026</div>
-    </div>
-
-    <div class="meta-bar">
-      <span id="tzLabel">Timezone: Local</span>
-      <span id="formatToggle" style="cursor: pointer; text-decoration: underline;">Switch to 12h</span>
-    </div>
+    
   </div>
 
   <script>
@@ -332,15 +326,9 @@
         this.hourHand = document.getElementById("hourHand");
         this.minHand = document.getElementById("minHand");
         this.secHand = document.getElementById("secHand");
-        this.digitalTime = document.getElementById("digitalTimeStr");
-        this.digitalSec = document.getElementById("digitalSecStr");
-        this.dateStr = document.getElementById("dateStr");
-        this.tzLabel = document.getElementById("tzLabel");
-        this.formatToggle = document.getElementById("formatToggle");
         this.themePicker = document.getElementById("themePicker");
         this.dial = document.getElementById("dial");
 
-        this.is24Hour = true;
         this.initDials();
         this.bindEvents();
         this.startEngine();
@@ -360,14 +348,6 @@
         this.themePicker.addEventListener("change", (e) => {
           document.documentElement.setAttribute("data-theme", e.target.value);
         });
-
-        this.formatToggle.addEventListener("click", () => {
-          this.is24Hour = !this.is24Hour;
-          this.formatToggle.textContent = this.is24Hour
-            ? "Switch to 12h"
-            : "Switch to 24h";
-          this.render();
-        });
       }
 
       render() {
@@ -384,30 +364,6 @@
         this.secHand.style.transform = `rotate(${secDeg}deg)`;
         this.minHand.style.transform = `rotate(${minDeg}deg)`;
         this.hourHand.style.transform = `rotate(${hourDeg}deg)`;
-
-        let rawHours = now.getHours();
-        let suffix = "";
-
-        if (!this.is24Hour) {
-          suffix = rawHours >= 12 ? " PM" : " AM";
-          rawHours = rawHours % 12 || 12;
-        }
-
-        const hh = String(rawHours).padStart(2, "0");
-        const mm = String(now.getMinutes()).padStart(2, "0");
-        const ss = String(now.getSeconds()).padStart(2, "0");
-
-        this.digitalTime.textContent = `${hh}:${mm}${suffix}`;
-        this.digitalSec.textContent = `:${ss}`;
-
-        const options = { 
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        };
-        this.dateStr.textContent = now.toLocaleDateString(undefined, options);
-        this.tzLabel.textContent = `TZ: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
       }
 
       startEngine() {
