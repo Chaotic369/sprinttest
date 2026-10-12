@@ -50,6 +50,21 @@
       --marker-major: #20c997;
     }
 
+    [data-theme="ruby"] {
+      --bg-color: #1f080c;
+      --card-bg: #2d0d13;
+      --border-color: #591622;
+      --text-main: #ffe3e8;
+      --text-muted: #f783ac;
+      --accent: #e64980;
+      --dial-bg: #140407;
+      --hour-hand: #ffe3e8;
+      --min-hand: #f783ac;
+      --sec-hand: #ff6b6b;
+      --marker: #591622;
+      --marker-major: #e64980;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -132,7 +147,7 @@
       width: 2px;
       height: 8px;
       background: var(--marker);
-      transform-origin: center -112px;
+      transform-origin: 50% 120px;
       border-radius: 2px;
     }
 
@@ -140,7 +155,7 @@
       width: 4px;
       height: 14px;
       background: var(--marker-major);
-      transform-origin: center -106px;
+      transform-origin: 50% 120px;
     }
 
     .hand {
@@ -235,6 +250,7 @@
         <option value="dark">Dark Theme</option>
         <option value="light">Light Theme</option>
         <option value="emerald">Emerald Theme</option>
+        <option value="ruby">Ruby Theme</option>
       </select>
     </header>
 
@@ -285,7 +301,7 @@
           const tick = document.createElement("div");
           const isMajor = i % 5 === 0;
           tick.className = `tick ${isMajor ? "major" : ""}`;
-          tick.style.transform = `translate(-50%, -50%) rotate(${i * 6}deg)`;
+          tick.style.transform = `translate(-50%, -120px) rotate(${i * 6}deg)`;
           this.dial.appendChild(tick);
         }
       }
