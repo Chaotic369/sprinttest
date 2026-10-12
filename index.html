@@ -1,9 +1,361 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Vibe App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Precision Analog & Digital Clock</title>
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --card-bg: #161b22;
+      --border-color: #30363d;
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --dial-bg: #090d13;
+      --hour-hand: #f0f6fc;
+      --min-hand: #8b949e;
+      --sec-hand: #ff7b72;
+      --marker: #30363d;
+      --marker-major: #58a6ff;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f6f8fa;
+      --card-bg: #ffffff;
+      --border-color: #d0d7de;
+      --text-main: #1f2328;
+      --text-muted: #656d76;
+      --accent: #0969da;
+      --dial-bg: #f6f8fa;
+      --hour-hand: #1f2328;
+      --min-hand: #57606a;
+      --sec-hand: #cf222e;
+      --marker: #d0d7de;
+      --marker-major: #0969da;
+    }
+
+    [data-theme="emerald"] {
+      --bg-color: #061e16;
+      --card-bg: #0a2d21;
+      --border-color: #124d38;
+      --text-main: #e6fcf5;
+      --text-muted: #69db7c;
+      --accent: #20c997;
+      --dial-bg: #04140f;
+      --hour-hand: #e6fcf5;
+      --min-hand: #8ce99a;
+      --sec-hand: #ffd43b;
+      --marker: #124d38;
+      --marker-major: #20c997;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .theme-select {
+      background: var(--bg-color);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .clock-face-container {
+      position: relative;
+      width: 260px;
+      height: 260px;
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: var(--dial-bg);
+      border: 4px solid var(--border-color);
+      border-radius: 50%;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .tick {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 8px;
+      background: var(--marker);
+      transform-origin: center -112px;
+      border-radius: 2px;
+    }
+
+    .tick.major {
+      width: 4px;
+      height: 14px;
+      background: var(--marker-major);
+      transform-origin: center -106px;
+    }
+
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: bottom center;
+      border-radius: 8px;
+    }
+
+    .hand.hour {
+      width: 6px;
+      height: 70px;
+      background: var(--hour-hand);
+      margin-left: -3px;
+      z-index: 2;
+    }
+
+    .hand.minute {
+      width: 4px;
+      height: 95px;
+      background: var(--min-hand);
+      margin-left: -2px;
+      z-index: 3;
+    }
+
+    .hand.second {
+      width: 2px;
+      height: 110px;
+      background: var(--sec-hand);
+      margin-left: -1px;
+      z-index: 4;
+    }
+
+    .center-pin {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      background: var(--sec-hand);
+      border: 3px solid var(--card-bg);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+    }
+
+    .digital-readout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .digital-time {
+      font-size: 2.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .digital-time span.sec {
+      font-size: 1.5rem;
+      color: var(--sec-hand);
+      margin-left: 4px;
+    }
+
+    .digital-date {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      letter-weight: 500;
+    }
+
+    .meta-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello Vibe!</h1>
+
+  <div class="container">
+    <header>
+      <h1>Chronometer</h1>
+      <select class="theme-select" id="themePicker" aria-label="Select Theme">
+        <option value="dark">Dark Theme</option>
+        <option value="light">Light Theme</option>
+        <option value="emerald">Emerald Theme</option>
+      </select>
+    </header>
+
+    <div class="clock-face-container">
+      <div class="clock-face" id="dial">
+        <div class="hand hour" id="hourHand"></div>
+        <div class="hand minute" id="minHand"></div>
+        <div class="hand second" id="secHand"></div>
+        <div class="center-pin"></div>
+      </div>
+    </div>
+
+    <div class="digital-readout">
+      <div class="digital-time">
+        <span id="digitalTimeStr">00:00</span><span class="sec" id="digitalSecStr">:00</span>
+      </div>
+      <div class="digital-date" id="dateStr">Monday, January 1, 2026</div>
+    </div>
+
+    <div class="meta-bar">
+      <span id="tzLabel">Timezone: Local</span>
+      <span id="formatToggle" style="cursor: pointer; text-decoration: underline;">Switch to 12h</span>
+    </div>
+  </div>
+
+  <script>
+    class WorldClock {
+      constructor() {
+        this.hourHand = document.getElementById("hourHand");
+        this.minHand = document.getElementById("minHand");
+        this.secHand = document.getElementById("secHand");
+        this.digitalTime = document.getElementById("digitalTimeStr");
+        this.digitalSec = document.getElementById("digitalSecStr");
+        this.dateStr = document.getElementById("dateStr");
+        this.tzLabel = document.getElementById("tzLabel");
+        this.formatToggle = document.getElementById("formatToggle");
+        this.themePicker = document.getElementById("themePicker");
+        this.dial = document.getElementById("dial");
+
+        this.is24Hour = true;
+        this.initDials();
+        this.bindEvents();
+        this.startEngine();
+      }
+
+      initDials() {
+        for (let i = 0; i < 60; i++) {
+          const tick = document.createElement("div");
+          const isMajor = i % 5 === 0;
+          tick.className = `tick ${isMajor ? "major" : ""}`;
+          tick.style.transform = `translate(-50%, -50%) rotate(${i * 6}deg)`;
+          this.dial.appendChild(tick);
+        }
+      }
+
+      bindEvents() {
+        this.themePicker.addEventListener("change", (e) => {
+          document.documentElement.setAttribute("data-theme", e.target.value);
+        });
+
+        this.formatToggle.addEventListener("click", () => {
+          this.is24Hour = !this.is24Hour;
+          this.formatToggle.textContent = this.is24Hour
+            ? "Switch to 12h"
+            : "Switch to 24h";
+          this.render();
+        });
+      }
+
+      render() {
+        const now = new Date();
+        const ms = now.getMilliseconds();
+        const seconds = now.getSeconds() + ms / 1000;
+        const minutes = now.getMinutes() + seconds / 60;
+        const hours = (now.getHours() % 12) + minutes / 60;
+
+        const secDeg = seconds * 6;
+        const minDeg = minutes * 6;
+        const hourDeg = hours * 30;
+
+        this.secHand.style.transform = `rotate(${secDeg}deg)`;
+        this.minHand.style.transform = `rotate(${minDeg}deg)`;
+        this.hourHand.style.transform = `rotate(${hourDeg}deg)`;
+
+        let rawHours = now.getHours();
+        let suffix = "";
+
+        if (!this.is24Hour) {
+          suffix = rawHours >= 12 ? " PM" : " AM";
+          rawHours = rawHours % 12 || 12;
+        }
+
+        const hh = String(rawHours).padStart(2, "0");
+        const mm = String(now.getMinutes()).padStart(2, "0");
+        const ss = String(now.getSeconds()).padStart(2, "0");
+
+        this.digitalTime.textContent = `${hh}:${mm}${suffix}`;
+        this.digitalSec.textContent = `:${ss}`;
+
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        this.dateStr.textContent = now.toLocaleDateString(undefined, options);
+        this.tzLabel.textContent = `TZ: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
+      }
+
+      startEngine() {
+        const tick = () => {
+          this.render();
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      new WorldClock();
+    });
+  </script>
 </body>
 </html>
