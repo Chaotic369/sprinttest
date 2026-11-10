@@ -141,14 +141,14 @@
     body {
       background-color: var(--brick-base);
       background-image:
-        radial-gradient(circle at 50% 40%, var(--spotlight) 0%, rgba(0, 0, 0, 0.78) 75%),
+        radial-gradient(ellipse at 50% 38%, var(--spotlight) 0%, rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0.82) 100%),
         linear-gradient(335deg, rgba(0, 0, 0, 0.45) 0.25em, transparent 0.25em),
         linear-gradient(155deg, rgba(255, 255, 255, 0.08) 0.25em, transparent 0.25em),
         linear-gradient(335deg, rgba(0, 0, 0, 0.45) 0.25em, transparent 0.25em),
         linear-gradient(155deg, rgba(255, 255, 255, 0.08) 0.25em, transparent 0.25em),
         linear-gradient(to right, var(--brick-mortar) 3px, transparent 3px),
         linear-gradient(to bottom, var(--brick-mortar) 3px, transparent 3px),
-        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05) 0, rgba(0, 0, 0, 0.05) 2px, transparent 2px, transparent 4px);
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 3px);
       background-size:
         100% 100%,
         58px 28px,
@@ -175,7 +175,8 @@
       justify-content: center;
       padding: 24px;
       overflow: hidden;
-      transition: background-color 0.4s ease;
+      background-attachment: fixed;
+            transition: background-color 0.4s ease;
     }
 
     .container {
